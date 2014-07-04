@@ -1,0 +1,6 @@
+{
+    "session-secret":"SESSION_SECRET_VALUE",
+    "backend-api":{
+        "url":"http://127.0.0.1:8383"
+    }
+}
