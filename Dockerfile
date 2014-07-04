@@ -1,7 +1,7 @@
 FROM ubuntu:12.04
 MAINTAINER Toshiaki Baba <toshiaki@netmark.jp>
 
-## minion(develop)
+## minion
 RUN apt-get update
 RUN apt-get -y upgrade
 RUN echo "postfix postfix/main_mailer_type select Internet Site" | debconf-set-selections
@@ -23,12 +23,12 @@ RUN sed -i.bak "s/SECRET_VALUE/${RANDOM}${RANDOM}${RANDOM}${RANDOM}${RANDOM}/" /
 RUN sudo -u minion curl -o /opt/minion/plugins/skipfish.deb http://launchpadlibrarian.net/126324272/skipfish_2.10b-1_amd64.deb
 RUN dpkg -i /opt/minion/plugins/skipfish.deb
 RUN sudo -u minion git clone https://github.com/mozilla/minion-skipfish-plugin /opt/minion/plugins/minion-skipfish-plugin
-RUN cd /opt/minion/plugins/minion-skipfish-plugin && python /opt/minion/plugins/minion-skipfish-plugin/setup.py develop
+RUN cd /opt/minion/plugins/minion-skipfish-plugin && python /opt/minion/plugins/minion-skipfish-plugin/setup.py install
 
 ## nmap plugin
 RUN apt-get -y install nmap
 RUN sudo -u minion git clone https://github.com/mozilla/minion-nmap-plugin /opt/minion/plugins/minion-nmap-plugin
-RUN cd /opt/minion/plugins/minion-nmap-plugin && python /opt/minion/plugins/minion-nmap-plugin/setup.py develop
+RUN cd /opt/minion/plugins/minion-nmap-plugin && python /opt/minion/plugins/minion-nmap-plugin/setup.py install
 
 ## supervisor
 RUN install -d /etc/supervisor ; install -d /etc/supervisor/conf.d
@@ -56,4 +56,7 @@ CMD ["/usr/bin/supervisord"]
 ## after docker run, must init db by using ssh(minion/minion) or nsinit or nsenter
 ##
 ## minion-db-init
-
+## minion-create-plan /opt/minion/minion-backend/plans/basic.plan
+## minion-create-plan /opt/minion/minion-backend/plans/skipfish.plan
+## minion-create-plan /opt/minion/minion-backend/plans/nmap.plan
+## 
